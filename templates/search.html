@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}Search | Customer Management System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Search Customers</span>
+        <h2>Find customers by ID, name, or email.</h2>
+        <p class="text-muted mb-0">This view uses SQL `LIKE` matching for text fields and direct lookup for customer ID.</p>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-lg-10">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="q" name="q" value="{{ query }}" placeholder="Enter customer ID, name, or email">
+                    <label for="q">Search Customer</label>
+                </div>
+            </div>
+            <div class="col-lg-2 d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for customer in customers %}
+                    <tr>
+                        <td>{{ customer.name }}</td>
+                        <td>{{ customer.email }}</td>
+                        <td>{{ customer.phone or 'N/A' }}</td>
+                        <td><a href="{{ url_for('record_interaction', customer_id=customer.id) }}" class="btn btn-sm btn-outline-primary">Record Interaction</a></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center py-4 text-muted">
+                            {% if query %}No matching customer records were found.{% else %}Start by entering a search term above.{% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

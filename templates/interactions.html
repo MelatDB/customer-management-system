@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Interactions | Customer Management System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Customer Engagement</span>
+        <h2>Record Interaction for {{ customer.name }}</h2>
+        <p class="text-muted mb-0">Log calls, emails, meetings, and follow-ups in one customer timeline.</p>
+    </div>
+    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Back to Dashboard</a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4">
+                <h4 class="fw-bold mb-3">Record Interaction</h4>
+                <form method="post" novalidate>
+                    <div class="form-floating mb-3">
+                        <select class="form-select" id="interaction_type" name="interaction_type" required>
+                            <option value="">Select interaction type</option>
+                            <option value="Call">Call</option>
+                            <option value="Email">Email</option>
+                            <option value="Meeting">Meeting</option>
+                            <option value="Follow-up">Follow-up</option>
+                        </select>
+                        <label for="interaction_type">Interaction Type</label>
+                    </div>
+                    <div class="form-floating mb-4">
+                        <textarea class="form-control notes-box" placeholder="Write interaction notes" id="notes" name="notes" required></textarea>
+                        <label for="notes">Notes</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Save Interaction</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4">
+                <h4 class="fw-bold mb-3">Interaction History</h4>
+                <div class="timeline">
+                    {% for interaction in interactions %}
+                    <div class="timeline-item">
+                        <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                            <div>
+                                <span class="timeline-badge">{{ interaction.interaction_type }}</span>
+                                <h6 class="mb-1">{{ interaction.interaction_date.strftime('%d %b %Y %I:%M %p') if interaction.interaction_date else 'Recent' }}</h6>
+                            </div>
+                            <form action="{{ url_for('delete_interaction', interaction_id=interaction.id) }}" method="post">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this interaction record?');">Delete</button>
+                            </form>
+                        </div>
+                        <p class="mb-0 text-muted">{{ interaction.notes }}</p>
+                    </div>
+                    {% else %}
+                    <p class="text-muted mb-0">No interactions have been recorded for this customer yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard | Customer Management System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Overview</span>
+        <h2>Customer Management Dashboard</h2>
+        <p class="text-muted mb-0">Manage customer records, interactions, and reporting from a single workspace.</p>
+    </div>
+    <a href="{{ url_for('add_customer') }}" class="btn btn-primary">Add Customer Record</a>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="metric-card">
+            <span>Total Customers</span>
+            <h3>{{ stats.customer_count }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="metric-card">
+            <span>Total Interactions</span>
+            <h3>{{ stats.interaction_count }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="metric-card">
+            <span>Reports Generated</span>
+            <h3>{{ stats.report_count }}</h3>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" action="{{ url_for('index') }}" class="row g-3 align-items-center">
+            <div class="col-lg-10">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="q" name="q" value="{{ query }}" placeholder="Search by customer name or email">
+                    <label for="q">Global Search Customer</label>
+                </div>
+            </div>
+            <div class="col-lg-2 d-grid">
+                <button type="submit" class="btn btn-outline-primary btn-lg">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Registered</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for customer in customers %}
+                    <tr>
+                        <td>{{ customer.name }}</td>
+                        <td>{{ customer.email }}</td>
+                        <td>{{ customer.phone or 'N/A' }}</td>
+                        <td>{{ customer.address or 'N/A' }}</td>
+                        <td>{{ customer.registration_date.strftime('%d %b %Y') if customer.registration_date else 'N/A' }}</td>
+                        <td class="text-end">
+                            <a href="{{ url_for('edit_customer', customer_id=customer.id) }}" class="btn btn-sm btn-outline-secondary">Update</a>
+                            <a href="{{ url_for('record_interaction', customer_id=customer.id) }}" class="btn btn-sm btn-outline-primary">Interactions</a>
+                            {% if current_user_role == 'Admin' %}
+                            <form action="{{ url_for('delete_customer', customer_id=customer.id) }}" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this customer record?');">Delete</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">No customer records found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

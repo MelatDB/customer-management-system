@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Interactions Overview | Customer Management System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Interactions</span>
+        <h2>Track recent customer engagement.</h2>
+        <p class="text-muted mb-0">Jump into any customer profile to log a new call, email, meeting, or follow-up.</p>
+    </div>
+    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Back to Customers</a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4">
+                <h4 class="fw-bold mb-3">Customers</h4>
+                <div class="list-group list-group-flush">
+                    {% for customer in customers %}
+                    <a href="{{ url_for('record_interaction', customer_id=customer.id) }}" class="list-group-item list-group-item-action py-3">
+                        <div class="fw-semibold">{{ customer.name }}</div>
+                        <small class="text-muted">{{ customer.email }}</small>
+                    </a>
+                    {% else %}
+                    <div class="text-muted">No customers available yet.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4">
+                <h4 class="fw-bold mb-3">Recent Activity</h4>
+                <div class="timeline">
+                    {% for interaction in interactions %}
+                    <div class="timeline-item">
+                        <span class="timeline-badge">{{ interaction.interaction_type }}</span>
+                        <h6 class="mb-1">{{ interaction.customer.name }}</h6>
+                        <p class="small text-muted mb-2">{{ interaction.interaction_date.strftime('%d %b %Y %I:%M %p') if interaction.interaction_date else 'Recent' }}</p>
+                        <p class="mb-0 text-muted">{{ interaction.notes }}</p>
+                    </div>
+                    {% else %}
+                    <p class="text-muted mb-0">No interactions recorded yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

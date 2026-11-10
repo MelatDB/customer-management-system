@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}{% if edit_mode %}Update Customer{% else %}Add Customer{% endif %} | Customer Management System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Customer Records</span>
+        <h2>{% if edit_mode %}Update Customer{% else %}Add Customer Record{% endif %}</h2>
+        <p class="text-muted mb-0">Capture accurate customer information with validation and a clean form layout.</p>
+    </div>
+    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Back to Dashboard</a>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+        <form method="post" class="row g-4" novalidate>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Customer name" value="{{ customer.name if customer else '' }}" required>
+                    <label for="name">Customer Name</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Customer email" value="{{ customer.email if customer else '' }}" required>
+                    <label for="email">Customer Email</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone number" value="{{ customer.phone if customer else '' }}">
+                    <label for="phone">Phone Number</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="address" name="address" placeholder="Address" value="{{ customer.address if customer else '' }}">
+                    <label for="address">Address</label>
+                </div>
+            </div>
+            <div class="col-12 d-flex gap-3">
+                <button type="submit" class="btn btn-primary px-4">
+                    {% if edit_mode %}Update Customer{% else %}Save Customer{% endif %}
+                </button>
+                <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
